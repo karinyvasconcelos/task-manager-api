@@ -1,4 +1,9 @@
 TaskManagerApi::Application.routes.draw do
+
+  namespace :api, defaults: {format: :jason}, constraints: {subdomain: 'api'}, path: "/" do
+
+
+  end
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
