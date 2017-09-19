@@ -1,6 +1,10 @@
 TaskManagerApi::Application.routes.draw do
 
   namespace :api, defaults: {format: :jason}, constraints: {subdomain: 'api'}, path: "/" do
+    namespace :v1 do
+      #Controles e rotas da versão 1
+      resources :tasks
+    end
 
 
   end
