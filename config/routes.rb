@@ -1,12 +1,11 @@
+require 'api_version_constraint'
+
 TaskManagerApi::Application.routes.draw do
 
   namespace :api, defaults: {format: :jason}, constraints: {subdomain: 'api'}, path: "/" do
-    namespace :v1 do
+    namespace :v1, path: "/", constraints:ApiVersionConstraint.new(version: 1) do
       #Controles e rotas da versão 1
-      resources :tasks
     end
-
-
   end
   # The priority is based upon order of creation:
   # first created -> highest priority.
