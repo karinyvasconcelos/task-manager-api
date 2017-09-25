@@ -3,9 +3,13 @@ require 'api_version_constraint'
 TaskManagerApi::Application.routes.draw do
 
   devise_for :users
-  namespace :api, defaults: {format: :jason}, constraints: {subdomain: 'api'}, path: "/" do
-    namespace :v1, path: "/", constraints:ApiVersionConstraint.new(version: 1) do
+  namespace :api, defaults: { format: :json }, constraints: {subdomain: 'api'}, path: "/" do
+    namespace :v1, path: "/", constraints: ApiVersionConstraint.new(version: 1) do
       #Controles e rotas da versão 1
+      resources :users, only: [:show]
+
+
+
     end
   end
   # The priority is based upon order of creation:
