@@ -4,23 +4,27 @@ require 'rails_helper'
 RSpec.describe 'Users API', type: :request do
 	let!(:user) { create(:user) } #O '!' força a criação da instância
 	let(:user_id) { user.id }
+	let(:headers) do
+		{
+			'Accept' => 'application/vnd.taskmanager.v1',
+			'Content-Type' => Mime[:json].to_s
+		}
+	end
 
 	before { host! 'api.taskmanager.dev' }
 
 	describe 'GET /users/:id' do
 		before do #Ocorre em cada 'it'
-			headers = { 'Accept' => 'application/vnd.taskmanager.v1' }
 			get "/users/#{user_id}", params: {}, headers: headers
 		end
 
 		context 'when the user exists' do
 
 			it 'returns the user' do
-				user_response = JSON.parse(response.body, symbolize_names: true) #Converte a string vinda de body
-				expect(user_response[:id]).to eq(user_id) #Espera-se que o id do usuário seja igual ao da base de dados criada em let
+				expect(json_body[:id]).to eq(user_id) #Espera-se que o id do usuário seja igual ao da base de dados criada em let
 			end
 
-			it 'return status code 200' do
+			it 'returns status code 200' do
 				expect(response).to have_http_status(200)
 			end
 		end
@@ -38,9 +42,8 @@ RSpec.describe 'Users API', type: :request do
 	describe 'POST /users' do
 
 		before do
-			headers = { 'Accept' => 'application/vnd.taskmanager.v1' }
 			#Fazer requisicao
-			post '/users', params: { user: user_params }, headers: headers
+			post '/users', params: { user: user_params }.to_json, headers: headers
 		end
 
 		context 'when the request params are valid' do
@@ -53,8 +56,7 @@ RSpec.describe 'Users API', type: :request do
 
 
 			it 'returns json data for the created user' do
-				user_response = JSON.parse(response.body, symbolize_names: true)
-				expect(user_response[:email]).to eq(user_params[:email])
+				expect(json_body[:email]).to eq(user_params[:email])
 
 			end
 		end
@@ -67,8 +69,7 @@ RSpec.describe 'Users API', type: :request do
 			end
 
 			it 'returns the json data for the errors' do
-				user_response = JSON.parse(response.body, symbolize_names: true)
-				expect(user_response).to have_key(:errors)
+				expect(json_body).to have_key(:errors)
 			end
 
 		end
@@ -76,8 +77,7 @@ RSpec.describe 'Users API', type: :request do
 
 	describe 'PUT /users/:id' do
 		before do
-			headers = { 'Accept' => 'application/vnd.taskmanager.v1' }
-			put "/users/#{user_id}", params: { user: user_params }, headers: headers
+			put "/users/#{user_id}", params: { user: user_params }.to_json, headers: headers
 		end
 
 		context 'when the request params are valid' do
@@ -87,8 +87,7 @@ RSpec.describe 'Users API', type: :request do
 			end
 
 			it 'returns the json data for the updated user' do
-				user_response = JSON.parse(response.body, symbolize_names: true)
-				expect(user_response[:email]).to eq(user_params[:email])
+				expect(json_body[:email]).to eq(user_params[:email])
 			end
 		end
 
@@ -100,8 +99,7 @@ RSpec.describe 'Users API', type: :request do
 			end
 
 			it 'returns the json data for the errors' do
-				user_response = JSON.parse(response.body, symbolize_names: true)
-				expect(user_response).to have_key(:errors)
+				expect(json_body).to have_key(:errors)
 			end
 		end
 	end
