@@ -6,4 +6,10 @@ class User < ApplicationRecord
 
   #Atributo virtual, nao esta presente na base de dados, utilizado nos testes
 
+  validates_uniqueness_of :auth_token
+
+  def info
+  	"#{email} - #{created_at}"
+  end
+
 end
