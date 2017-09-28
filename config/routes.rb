@@ -8,7 +8,7 @@ TaskManagerApi::Application.routes.draw do
     namespace :v1, path: '/', constraints: ApiVersionConstraint.new(version: 1, default: true) do
       #Controles e rotas da versão 1
       resources :users, only: [:show, :create, :update, :destroy]
-      resources :sessions, only: [:create]
+      resources :sessions, only: [:create, :destroy]
 
     end
   end
